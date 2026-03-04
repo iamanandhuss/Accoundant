@@ -1,0 +1,23 @@
+{
+    "name": "personal-finance-tracker",
+    "version": "1.0.0",
+    "description": "Full‑stack personal finance tracker",
+    "main": "server.js",
+    "scripts": {
+        "dev": "nodemon server.js",
+        "start": "node server.js",
+        "test": "jest"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "dotenv": "^17.3.1",
+        "express": "^4.22.1",
+        "sqlite3": "^5.1.6"
+    },
+    "devDependencies": {
+        "jest": "^29.6.1",
+        "nodemon": "^3.0.1",
+        "supertest": "^6.3.3"
+    }
+}

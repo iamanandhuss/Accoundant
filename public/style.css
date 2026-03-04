@@ -1,0 +1,195 @@
+/* Premium dark mode UI with glassmorphism and subtle animations */
+
+/* Global styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0d0d0d, #1a1a2e);
+  color: #e0e0e0;
+  overflow-x: hidden;
+}
+
+header.header {
+  text-align: center;
+  padding: 2rem 0;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+header.header h1 {
+  font-size: 2.5rem;
+  color: #ffcc00;
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+/* Dashboard cards */
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #ffcc00;
+}
+
+.card .value {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+/* Form styling */
+.forms {
+  grid-column: 1 / -1;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.forms h2 {
+  margin-bottom: 1rem;
+  color: #ffcc00;
+}
+
+#entry-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+#entry-form select,
+#entry-form input,
+#entry-form button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+#entry-form select,
+#entry-form input {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+  backdrop-filter: blur(4px);
+}
+
+#entry-form button {
+  background: #ffcc00;
+  color: #1a1a2e;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#entry-form button:hover {
+  background: #e6b800;
+}
+
+/* Canvas styling */
+#summary-chart {
+  width: 100%;
+  max-width: 600px;
+  margin: 2rem auto;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+/* Entries table styling */
+.entries {
+  grid-column: 1 / -1;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.entries h2 {
+  margin-bottom: 1.5rem;
+  color: #ffcc00;
+}
+
+.entries h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: #b3d9ff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table thead {
+  background: rgba(255, 204, 0, 0.1);
+}
+
+table th {
+  padding: 1rem;
+  text-align: left;
+  color: #ffcc00;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+table td {
+  padding: 0.8rem 1rem;
+  color: #e0e0e0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  header.header h1 {
+    font-size: 2rem;
+  }
+  .container {
+    grid-template-columns: 1fr;
+  }
+  table {
+    font-size: 0.9rem;
+  }
+  table th,
+  table td {
+    padding: 0.6rem 0.8rem;
+  }
+}
