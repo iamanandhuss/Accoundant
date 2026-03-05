@@ -47,7 +47,7 @@ function displayEntriesInTable(type, entries) {
     tbody.innerHTML = '';
 
     if (entries.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No entries yet</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No entries yet</td></tr>';
         return;
     }
 
@@ -59,6 +59,7 @@ function displayEntriesInTable(type, entries) {
                 <td>${formatCurrency(entry.amount)}</td>
                 <td>${entry.source}</td>
                 <td>${entry.date}</td>
+                <td><button class="delete-btn" data-type="${type}" data-id="${entry.id}">Delete</button></td>
             `;
         } else if (type === 'expenses') {
             row.innerHTML = `
@@ -66,6 +67,7 @@ function displayEntriesInTable(type, entries) {
                 <td>${formatCurrency(entry.amount)}</td>
                 <td>${entry.category}</td>
                 <td>${entry.date}</td>
+                <td><button class="delete-btn" data-type="${type}" data-id="${entry.id}">Delete</button></td>
             `;
         } else if (type === 'debts') {
             row.innerHTML = `
@@ -73,9 +75,19 @@ function displayEntriesInTable(type, entries) {
                 <td>${formatCurrency(entry.amount)}</td>
                 <td>${entry.creditor}</td>
                 <td>${entry.due_date}</td>
+                <td><button class="delete-btn" data-type="${type}" data-id="${entry.id}">Delete</button></td>
             `;
         }
         tbody.appendChild(row);
+    });
+
+    // Add event listeners to delete buttons
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const type = btn.getAttribute('data-type');
+            const id = btn.getAttribute('data-id');
+            await deleteEntry(type, id);
+        });
     });
 }
 
@@ -150,6 +162,26 @@ async function handleFormSubmit(event) {
     } catch (e) {
         console.error(e);
         alert('Could not add entry');
+    }
+}
+
+// Delete entry
+async function deleteEntry(type, id) {
+    if (!confirm(`Are you sure you want to delete this ${type} entry?`)) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`${apiBase}/${type}/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (!res.ok) throw new Error('Failed to delete entry');
+        // Refresh dashboard and entries table
+        await updateDashboard();
+    } catch (e) {
+        console.error(e);
+        alert('Could not delete entry');
     }
 }
 

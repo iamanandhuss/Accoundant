@@ -116,6 +116,22 @@ header.header h1 {
   background: #e6b800;
 }
 
+/* Delete button styling */
+.delete-btn {
+  background: #ff6666;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #e60000;
+}
+
 /* Canvas styling */
 #summary-chart {
   width: 100%;
