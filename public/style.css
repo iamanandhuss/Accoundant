@@ -103,6 +103,66 @@ header.header h1 {
   font-size: 0.9rem;
 }
 
+/* Balance status colors */
+.card.positive-balance {
+  border-color: #66ff66;
+  background: rgba(102, 255, 102, 0.05);
+}
+
+.card.positive-balance .label {
+  color: #99ff99;
+}
+
+.card.negative-balance {
+  border-color: #ff6666;
+  background: rgba(255, 102, 102, 0.05);
+}
+
+.card.negative-balance .label {
+  color: #ff9999;
+}
+
+.card.negative-balance .value {
+  color: #ff6666;
+  font-weight: bold;
+}
+
+/* Balance information display */
+.balance-info {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.balance-info p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #b0b0b0;
+}
+
+.balance-amount {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #99ff99;
+}
+
+.balance-warning {
+  color: #ff6666;
+  background: rgba(255, 102, 102, 0.1);
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  flex: 1;
+  min-width: 250px;
+  text-align: center;
+}
+
 .container {
   max-width: 1200px;
   margin: 2rem auto;

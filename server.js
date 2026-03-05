@@ -292,12 +292,16 @@ app.get('/api/summary', authenticateToken, async (req, res) => {
     const income = results[0][0][0].total || 0;
     const expenses = results[1][0][0].total || 0;
     const debts = results[2][0][0].total || 0;
+    const balance = income - expenses - debts;
     
     const result = {
       income,
       expenses,
       debts,
-      net: income - expenses - debts
+      net: balance,
+      balance: balance,
+      canAddExpense: balance > 0,
+      balanceStatus: balance >= 0 ? 'positive' : 'negative'
     };
     
     res.json(result);

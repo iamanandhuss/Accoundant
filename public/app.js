@@ -47,7 +47,26 @@ async function updateDashboard() {
         document.querySelector('#total-income .value').textContent = formatCurrency(data.income || 0);
         document.querySelector('#total-expenses .value').textContent = formatCurrency(data.expenses || 0);
         document.querySelector('#total-debts .value').textContent = formatCurrency(data.debts || 0);
-        document.getElementById('net-balance-value').textContent = formatCurrency(data.net || 0);
+        
+        // Update balance display with status color
+        const balanceElement = document.getElementById('net-balance-value');
+        balanceElement.textContent = formatCurrency(data.net || 0);
+        
+        // Set balance status color and message
+        const balanceCard = document.getElementById('net-balance');
+        if (balanceCard) {
+            if (data.balance < 0) {
+                balanceCard.classList.add('negative-balance');
+                balanceCard.classList.remove('positive-balance');
+            } else {
+                balanceCard.classList.add('positive-balance');
+                balanceCard.classList.remove('negative-balance');
+            }
+        }
+        
+        // Store balance globally for form validation
+        window.currentBalance = data.balance || 0;
+        
         renderChart(data);
         await loadAndDisplayEntries();
     } catch (e) {
@@ -161,6 +180,15 @@ async function handleFormSubmit(event) {
     const detail = document.getElementById('detail').value.trim();
     const date = document.getElementById('date').value;
     if (isNaN(amount) || !detail || !date) return;
+
+    // Check if trying to add expense with insufficient balance
+    if (type === 'expenses' && window.currentBalance !== undefined) {
+        const newBalance = window.currentBalance - amount;
+        if (newBalance < 0) {
+            alert(`⚠️ Insufficient Balance!\n\nCurrent Balance: ${formatCurrency(window.currentBalance)}\nExpense Amount: ${formatCurrency(amount)}\nResulting Balance: ${formatCurrency(newBalance)}\n\nYou cannot add expenses when your balance would go negative.`);
+            return;
+        }
+    }
 
     const payload = {};
     if (type === 'income') {
