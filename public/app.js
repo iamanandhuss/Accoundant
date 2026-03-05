@@ -101,7 +101,9 @@ function displayEntriesInTable(type, entries) {
         return;
     }
 
+    let totalAmount = 0;
     entries.forEach(entry => {
+        totalAmount += entry.amount;
         const row = document.createElement('tr');
         if (type === 'income') {
             row.innerHTML = `
@@ -130,6 +132,17 @@ function displayEntriesInTable(type, entries) {
         }
         tbody.appendChild(row);
     });
+
+    // Add sum row
+    const sumRow = document.createElement('tr');
+    sumRow.classList.add('sum-row');
+    const title = type === 'income' ? 'Total Income' : type === 'expenses' ? 'Total Expenses' : 'Total Debts';
+    const color = type === 'income' ? '#66ff66' : type === 'expenses' ? '#ff6666' : '#66b2ff';
+    sumRow.innerHTML = `
+        <td colspan="2" style="text-align: right; font-weight: bold;">${title}:</td>
+        <td colspan="3" style="font-weight: bold; color: ${color};">${formatCurrency(totalAmount)}</td>
+    `;
+    tbody.appendChild(sumRow);
 
     // Add event listeners to delete buttons
     document.querySelectorAll('.delete-btn').forEach(btn => {

@@ -84,7 +84,9 @@ function displayIncomeTable(entries) {
     return;
   }
   
+  let totalAmount = 0;
   entries.forEach(entry => {
+    totalAmount += entry.amount;
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${entry.id}</td>
@@ -95,6 +97,15 @@ function displayIncomeTable(entries) {
     `;
     tbody.appendChild(row);
   });
+  
+  // Add sum row
+  const sumRow = document.createElement('tr');
+  sumRow.classList.add('sum-row');
+  sumRow.innerHTML = `
+    <td colspan="2" style="text-align: right; font-weight: bold;">Total Income:</td>
+    <td colspan="3" style="font-weight: bold; color: #66ff66;">${formatCurrency(totalAmount)}</td>
+  `;
+  tbody.appendChild(sumRow);
   
   attachDeleteListeners();
 }
@@ -109,7 +120,9 @@ function displayExpensesTable(entries) {
     return;
   }
   
+  let totalAmount = 0;
   entries.forEach(entry => {
+    totalAmount += entry.amount;
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${entry.id}</td>
@@ -120,6 +133,15 @@ function displayExpensesTable(entries) {
     `;
     tbody.appendChild(row);
   });
+  
+  // Add sum row
+  const sumRow = document.createElement('tr');
+  sumRow.classList.add('sum-row');
+  sumRow.innerHTML = `
+    <td colspan="2" style="text-align: right; font-weight: bold;">Total Expenses:</td>
+    <td colspan="3" style="font-weight: bold; color: #ff6666;">${formatCurrency(totalAmount)}</td>
+  `;
+  tbody.appendChild(sumRow);
   
   attachDeleteListeners();
 }
@@ -134,7 +156,9 @@ function displayDebtsTable(entries) {
     return;
   }
   
+  let totalAmount = 0;
   entries.forEach(entry => {
+    totalAmount += entry.amount;
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${entry.id}</td>
@@ -145,6 +169,15 @@ function displayDebtsTable(entries) {
     `;
     tbody.appendChild(row);
   });
+  
+  // Add sum row
+  const sumRow = document.createElement('tr');
+  sumRow.classList.add('sum-row');
+  sumRow.innerHTML = `
+    <td colspan="2" style="text-align: right; font-weight: bold;">Total Debts:</td>
+    <td colspan="3" style="font-weight: bold; color: #66b2ff;">${formatCurrency(totalAmount)}</td>
+  `;
+  tbody.appendChild(sumRow);
   
   attachDeleteListeners();
 }
