@@ -5,6 +5,33 @@
 
 const apiBase = '/api';
 
+// Check if user is logged in
+function checkAuth() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = '/';
+    return false;
+  }
+  return token;
+}
+
+// Get authorization header
+function getAuthHeader() {
+  const token = checkAuth();
+  return {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  };
+}
+
+// Logout function
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  }
+}
+
 // Utility to format numbers as currency
 function formatCurrency(value) {
     return `₹${Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -13,7 +40,9 @@ function formatCurrency(value) {
 // Update dashboard values
 async function updateDashboard() {
     try {
-        const res = await fetch(`${apiBase}/summary`);
+        const res = await fetch(`${apiBase}/summary`, {
+            headers: getAuthHeader()
+        });
         const data = await res.json();
         document.querySelector('#total-income .value').textContent = formatCurrency(data.income || 0);
         document.querySelector('#total-expenses .value').textContent = formatCurrency(data.expenses || 0);
@@ -31,7 +60,9 @@ async function loadAndDisplayEntries() {
     const types = ['income', 'expenses', 'debts'];
     for (const type of types) {
         try {
-            const res = await fetch(`${apiBase}/${type}`);
+            const res = await fetch(`${apiBase}/${type}`, {
+                headers: getAuthHeader()
+            });
             const entries = await res.json();
             displayEntriesInTable(type, entries);
         } catch (e) {
@@ -149,7 +180,7 @@ async function handleFormSubmit(event) {
     try {
         const res = await fetch(`${apiBase}/${type}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeader(),
             body: JSON.stringify(payload)
         });
         if (!res.ok) throw new Error('Failed to add entry');
@@ -174,7 +205,7 @@ async function deleteEntry(type, id) {
     try {
         const res = await fetch(`${apiBase}/${type}/${id}`, {
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' }
+            headers: getAuthHeader()
         });
         if (!res.ok) throw new Error('Failed to delete entry');
         // Refresh dashboard and entries table
@@ -187,6 +218,7 @@ async function deleteEntry(type, id) {
 
 // Initialise
 document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
     document.getElementById('entry-form').addEventListener('submit', handleFormSubmit);
     updateDashboard();
 });

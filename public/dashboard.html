@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Finance Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>Personal Finance Tracker</h1>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
+  <main class="container">
+    <section class="dashboard">
+      <div class="card" id="total-income">
+        <h2>Total Income</h2>
+        <p class="value" data-type="income">₹0</p>
+      </div>
+      <div class="card" id="total-expenses">
+        <h2>Total Expenses</h2>
+        <p class="value" data-type="expenses">₹0</p>
+      </div>
+      <div class="card" id="total-debts">
+        <h2>Total Debts</h2>
+        <p class="value" data-type="debts">₹0</p>
+      </div>
+      <div class="card" id="net-balance">
+        <h2>Net Balance</h2>
+        <p class="value" id="net-balance-value">₹0</p>
+      </div>
+      <canvas id="summary-chart" width="400" height="200"></canvas>
+    </section>
+
+    <section class="forms">
+      <h2>Add Entry</h2>
+      <form id="entry-form">
+        <select id="entry-type" required>
+          <option value="income">Income</option>
+          <option value="expenses">Expense</option>
+          <option value="debts">Debt</option>
+        </select>
+        <input type="number" id="amount" placeholder="Amount" step="0.01" required />
+        <input type="text" id="detail" placeholder="Source / Category / Creditor" required />
+        <input type="date" id="date" required />
+        <button type="submit">Add</button>
+      </form>
+    </section>
+
+    <section class="entries">
+      <h2>All Entries</h2>
+      <div id="entries-container">
+        <h3>Income</h3>
+        <table id="income-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Amount</th>
+              <th>Source</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <h3>Expenses</h3>
+        <table id="expenses-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Amount</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <h3>Debts</h3>
+        <table id="debts-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Amount</th>
+              <th>Creditor</th>
+              <th>Due Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
