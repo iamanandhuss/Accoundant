@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Entry - Personal Finance Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <h1>Personal Finance Tracker</h1>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+    <a href="add-entry.html" class="nav-link active">Add Entry</a>
+    <a href="entries.html" class="nav-link">All Entries</a>
+  </nav>
+
+  <main class="container">
+    <section class="forms">
+      <h2>Add New Entry</h2>
+      <form id="entry-form">
+        <select id="entry-type" required>
+          <option value="income">Income</option>
+          <option value="expenses">Expense</option>
+          <option value="debts">Debt</option>
+        </select>
+        <input type="number" id="amount" placeholder="Amount" step="0.01" required />
+        <input type="text" id="detail" placeholder="Source / Category / Creditor" required />
+        <input type="date" id="date" required />
+        <button type="submit">Add Entry</button>
+      </form>
+      <div id="success-message" class="success-message"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

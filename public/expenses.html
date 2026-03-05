@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expenses - Personal Finance Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <h1>Personal Finance Tracker</h1>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+    <a href="add-entry.html" class="nav-link">Add Entry</a>
+    <a href="income.html" class="nav-link">Income</a>
+    <a href="expenses.html" class="nav-link active">Expenses</a>
+    <a href="debts.html" class="nav-link">Debts</a>
+  </nav>
+
+  <main class="container">
+    <section class="entries">
+      <div class="section-header">
+        <h2>Expense Entries</h2>
+        <div class="filter-controls">
+          <input type="text" id="filter-search" placeholder="Search by category..." />
+          <select id="filter-sort">
+            <option value="date-desc">Latest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="amount-desc">Highest Amount</option>
+            <option value="amount-asc">Lowest Amount</option>
+          </select>
+        </div>
+      </div>
+      
+      <div id="entries-container">
+        <table id="expenses-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Amount</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="filter.js"></script>
+</body>
+</html>

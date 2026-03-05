@@ -183,16 +183,35 @@ async function handleFormSubmit(event) {
             headers: getAuthHeader(),
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('Failed to add entry');
+        
+        const responseData = await res.json();
+        
+        if (!res.ok) {
+            throw new Error(responseData.error || `Failed to add entry: ${res.status}`);
+        }
+        
+        // Show success message if on add-entry page
+        const successDiv = document.getElementById('success-message');
+        if (successDiv) {
+            successDiv.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} entry added successfully!`;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+        
         // Clear form
         document.getElementById('amount').value = '';
         document.getElementById('detail').value = '';
         document.getElementById('date').value = '';
-        // Refresh dashboard and entries table
-        await updateDashboard();
+        
+        // Refresh dashboard if on dashboard page
+        if (window.location.pathname.includes('dashboard.html')) {
+            await updateDashboard();
+        }
     } catch (e) {
-        console.error(e);
-        alert('Could not add entry');
+        console.error('Entry submission error:', e);
+        alert('Could not add entry: ' + e.message);
     }
 }
 
@@ -219,6 +238,21 @@ async function deleteEntry(type, id) {
 // Initialise
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
-    document.getElementById('entry-form').addEventListener('submit', handleFormSubmit);
-    updateDashboard();
+    const pathname = window.location.pathname;
+    
+    // All pages have the form handler if form exists
+    const entryForm = document.getElementById('entry-form');
+    if (entryForm) {
+        entryForm.addEventListener('submit', handleFormSubmit);
+    }
+    
+    // Dashboard page
+    if (pathname.includes('dashboard.html') || pathname === '/dashboard.html') {
+        updateDashboard();
+    }
+    
+    // Entries page
+    if (pathname.includes('entries.html')) {
+        loadAndDisplayEntries();
+    }
 });

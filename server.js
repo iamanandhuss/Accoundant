@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-default-secret-key-must-change-in-production';
 
 // Middleware
 app.use(express.json());
@@ -26,13 +26,6 @@ const pool = mysql.createPool({
 
 // Initialize tables if they don't exist
 const initQueries = [
-  `CREATE TABLE IF NOT EXISTS users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(255) NOT NULL UNIQUE,
-  email VARCHAR(255) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)`,
   `CREATE TABLE IF NOT EXISTS income (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -62,12 +55,43 @@ const initQueries = [
 async function initDb() {
   try {
     const conn = await pool.getConnection();
-    console.log('Got connection, creating tables...');
+    console.log('Got connection, initializing database...');
+    
+    // Create users table if it doesn't exist
+    await conn.query(`CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(255) NOT NULL UNIQUE,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`);
+    
+    // Create transaction tables if they don't exist
     for (const query of initQueries) {
       await conn.query(query);
     }
+    
+    // Add user_id column to existing tables if missing
+    const migrationQueries = [
+      `ALTER TABLE income ADD COLUMN user_id INT NOT NULL DEFAULT 1 AFTER id`,
+      `ALTER TABLE expenses ADD COLUMN user_id INT NOT NULL DEFAULT 1 AFTER id`,
+      `ALTER TABLE debts ADD COLUMN user_id INT NOT NULL DEFAULT 1 AFTER id`
+    ];
+    
+    for (const query of migrationQueries) {
+      try {
+        await conn.query(query);
+        console.log('Migration executed:', query.substring(0, 50));
+      } catch (err) {
+        // Column might already exist, which is fine
+        if (err.code !== 'ER_DUP_FIELDNAME') {
+          console.log('Migration skipped (column already exists)');
+        }
+      }
+    }
+    
     conn.release();
-    console.log('Ensured tables exist');
+    console.log('Database initialized successfully');
   } catch (err) {
     console.error('Error initializing database', err.message);
   }

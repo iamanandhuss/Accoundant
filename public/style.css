@@ -21,19 +21,27 @@ header.header {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-content {
   position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
 }
 
 header.header h1 {
   font-size: 2.5rem;
   color: #ffcc00;
   text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+  margin: 0;
 }
 
 .logout-btn {
-  position: absolute;
-  top: 1.5rem;
-  right: 2rem;
+  position: static;
   background: #ff6666;
   color: #fff;
   padding: 0.6rem 1.2rem;
@@ -46,6 +54,53 @@ header.header h1 {
 
 .logout-btn:hover {
   background: #e60000;
+}
+
+/* Navigation bar */
+.navbar {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 0;
+  padding: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-link {
+  flex: 1;
+  display: block;
+  padding: 1rem;
+  text-align: center;
+  color: #b0b0b0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.nav-link:hover {
+  color: #ffcc00;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+  color: #ffcc00;
+  border-bottom-color: #ffcc00;
+  background: rgba(255, 204, 0, 0.1);
+}
+
+/* Success message */
+.success-message {
+  display: none;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: rgba(102, 255, 102, 0.2);
+  border: 1px solid #66ff66;
+  border-radius: 8px;
+  color: #99ff99;
+  text-align: center;
+  font-size: 0.9rem;
 }
 
 .container {
