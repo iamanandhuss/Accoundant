@@ -1,47 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard - Personal Finance Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Dashboard</title>
+    <!-- Only loading the light theme CSS from the screenshot -->
+    <link rel="stylesheet" href="mCss.css">
+    <style>
+        /* Specific overrides to allow Chart.js to inherit cleanly */
+        #summary-chart {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
 </head>
+
 <body>
-  <header class="header">
-    <div class="header-content">
-      <h1>Personal Finance Tracker</h1>
-      <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <div class="dashboard-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div>
+                <div class="logo">COINEST</div>
+
+                <nav class="menu">
+                    <a href="dashboard.html" class="active">Dashboard</a>
+                    <a href="payments.html">Payments</a>
+                    <a href="entries.html">Transactions</a>
+                    <a href="add-entry.html">Add Entry</a>
+                </nav>
+            </div>
+
+            <div>
+                <div class="promo-card" style="margin-bottom: 20px;">
+                    <p>Gain full access to your finances with detailed analytics and graphs.</p>
+                    <button>Go Pro</button>
+                </div>
+                <button class="logout-btn-side" onclick="logout()">Logout</button>
+            </div>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+
+            <!-- Header -->
+            <header class="header">
+                <h1>Dashboard</h1>
+
+                <div class="header-right-container">
+                    <input class="search" type="text" placeholder="Search placeholder">
+
+                    <div class="header-actions">
+                        <span class="icon">◎</span>
+                        <span class="icon">🔔</span>
+                        <div class="profile">
+                            <span id="user-greeting">Andrew Forbist</span>
+                            <img src="https://i.pravatar.cc/40" alt="">
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Top Metrics & Secondary Chart Section -->
+            <section class="summary-container">
+
+                <!-- 4 Metrics Grid -->
+                <div class="four-metrics">
+                    <div class="metric-card" id="total-income">
+                        <div class="metric-header"><span>Income</span></div>
+                        <div class="metric-value-row">
+                            <h2 class="value" data-type="income">$8,500</h2>
+                            <span class="badge green">↑ 1.78%</span>
+                        </div>
+                        <span class="subtitle text-green">+ $355 than last week</span>
+                    </div>
+
+                    <div class="metric-card" id="total-expenses">
+                        <div class="metric-header"><span>Expense</span></div>
+                        <div class="metric-value-row">
+                            <h2 class="value" data-type="expenses">$4,900</h2>
+                            <span class="badge red">↓ 2.45%</span>
+                        </div>
+                        <span class="subtitle text-red">- $126 than last week</span>
+                    </div>
+
+                    <div class="metric-card" id="total-debts">
+                        <div class="metric-header"><span>Debts</span></div>
+                        <div class="metric-value-row">
+                            <h2 class="value" data-type="debts">$2,000</h2>
+                            <span class="badge red">Active</span>
+                        </div>
+                        <span class="subtitle text-red">Awaiting clearance</span>
+                    </div>
+
+                    <div class="metric-card" id="net-balance">
+                        <div class="metric-header"><span>Net Balance</span></div>
+                        <div class="metric-value-row">
+                            <h2 class="value" id="net-balance-value">$12,000</h2>
+                            <span class="badge green">Healthy</span>
+                        </div>
+                        <span class="subtitle text-green">Overall status</span>
+                    </div>
+                </div>
+
+                <!-- Expense Breakdown card -->
+                <div class="card" style="display:flex; flex-direction:column; justify-content:center;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <h3>Expense Breakdown</h3>
+                        <span style="font-size:12px; color:#6a746e;">Today ∨</span>
+                    </div>
+
+                    <div style="display:flex; gap: 20px; align-items:center; margin-top:20px;">
+                        <div class="circle-chart"></div>
+
+                        <div style="flex:1;">
+                            <ul class="expense-list">
+                                <li>
+                                    <div><span style="color:#1a3224; margin-right:5px;">■</span> Food & Dining</div>
+                                    <span>50%</span>
+                                </li>
+                                <li>
+                                    <div><span style="color:#8de392; margin-right:5px;">■</span> Utilities</div>
+                                    <span>30%</span>
+                                </li>
+                                <li>
+                                    <div><span style="color:#eef2f0; margin-right:5px;">■</span> Investment</div>
+                                    <span>20%</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Middle Section (Cashflow & Balance) -->
+            <section class="middle-section">
+
+                <!-- Cashflow -->
+                <div class="card" style="grid-column: span 2;">
+                    <div class="cashflow-header">
+                        <div>
+                            <h3>Cashflow</h3>
+                            <p class="total-balance-text">Total Balance</p>
+                            <p class="total-balance-val" id="chart-balance-value">$12,000</p>
+                        </div>
+                        <div style="text-align:right;">
+                            <span
+                                style="font-size:12px; border:1px solid #eef2f0; padding:5px 10px; border-radius:8px;">Last
+                                7 Days ∨</span>
+                            <div class="chart-legend" style="margin-top:10px;">
+                                <span class="legend-item legend-income">Income</span>
+                                <span class="legend-item legend-expense">Expense</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-area">
+                        <canvas id="summary-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Balance Cards -->
+                <div class="card balance-card">
+                    <h3>Balance</h3>
+                    <p style="font-size:12px; color:#6a746e;">Total Balance</p>
+                    <h2 style="font-size:24px; font-weight:800; margin-bottom:10px;" id="card-balance-total">$1,377,000
+                    </h2>
+
+                    <div class="cc green">
+                        <h4>VISA</h4>
+                        <p>Platinum Plus Visa</p>
+                        <p class="number">4532 8723 0045 9967</p>
+                    </div>
+
+                    <div class="cc light">
+                        <h4>Mastercard</h4>
+                        <p>Freedom Unlimited</p>
+                        <p class="number">5582 5574 8376 5487</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Bottom Section -->
+            <section class="bottom-section">
+
+                <!-- Transactions -->
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                        <h3>Recent Transactions</h3>
+                        <div>
+                            <span
+                                style="font-size:12px; border:1px solid #eef2f0; padding:5px 10px; border-radius:8px; margin-right:10px;">This
+                                Month ∨</span>
+                            <span class="icon"
+                                style="display:inline-flex; width:28px; height:28px; border-radius:6px;">⇕</span>
+                        </div>
+                    </div>
+
+                    <table id="recent-transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction Name</th>
+                                <th>Account</th>
+                                <th>Date & Time</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Saving Plans -->
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                        <h3>Saving Plans</h3>
+                        <span style="font-size:12px; font-weight:600; cursor:pointer;">+ Add Plans</span>
+                    </div>
+
+                    <p style="font-size:12px; color:#6a746e;">Total Savings</p>
+                    <h2 style="font-size:24px; font-weight:800;">$12,000</h2>
+
+                    <div class="plan-item">
+                        <p>Emergency Fund</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width:45%"></div>
+                        </div>
+                        <div class="plan-stats"><span>$4,500 / $10,000</span><span>45%</span></div>
+                    </div>
+
+                    <div class="plan-item">
+                        <p>Retirement Fund</p>
+                        <div class="progress">
+                            <div class="progress-bar light" style="width:25%"></div>
+                        </div>
+                        <div class="plan-stats"><span>$5,000 / $20,000</span><span>25%</span></div>
+                    </div>
+
+                    <div class="plan-item">
+                        <p>Vacation Fund</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width:50%"></div>
+                        </div>
+                        <div class="plan-stats"><span>$2,500 / $5,000</span><span>50%</span></div>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
     </div>
-  </header>
 
-  <nav class="navbar">
-    <a href="dashboard.html" class="nav-link active">Dashboard</a>
-    <a href="add-entry.html" class="nav-link">Add Entry</a>
-    <a href="entries.html" class="nav-link">All Entries</a>
-  </nav>
-
-  <main class="container">
-    <section class="dashboard">
-      <div class="card" id="total-income">
-        <h2 class="label">Total Income</h2>
-        <p class="value" data-type="income">₹0</p>
-      </div>
-      <div class="card" id="total-expenses">
-        <h2 class="label">Total Expenses</h2>
-        <p class="value" data-type="expenses">₹0</p>
-      </div>
-      <div class="card" id="total-debts">
-        <h2 class="label">Total Debts</h2>
-        <p class="value" data-type="debts">₹0</p>
-      </div>
-      <div class="card" id="net-balance">
-        <h2 class="label">Net Balance</h2>
-        <p class="value" id="net-balance-value">₹0</p>
-      </div>
-      <canvas id="summary-chart" width="400" height="200"></canvas>
-    </section>
-  </main>
-
-  <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
+
 </html>

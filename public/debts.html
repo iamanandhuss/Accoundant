@@ -1,31 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Debts - Personal Finance Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="mCss.css">
+  <style>
+    .table-card {
+      margin-bottom: 25px;
+      overflow-x: auto;
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .filter-controls input,
+    .filter-controls select {
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: 1px solid #eef2f0;
+      background: #f7f9fc;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .filter-controls input:focus,
+    .filter-controls select:focus {
+      border-color: #8de392;
+    }
+  </style>
 </head>
+
 <body>
-  <header class="header">
-    <div class="header-content">
-      <h1>Personal Finance Tracker</h1>
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
-  </header>
 
-  <nav class="navbar">
-    <a href="dashboard.html" class="nav-link">Dashboard</a>
-    <a href="add-entry.html" class="nav-link">Add Entry</a>
-    <a href="income.html" class="nav-link">Income</a>
-    <a href="expenses.html" class="nav-link">Expenses</a>
-    <a href="debts.html" class="nav-link active">Debts</a>
-  </nav>
+  <div class="dashboard-layout">
 
-  <main class="container">
-    <section class="entries">
-      <div class="section-header">
-        <h2>Debt Entries</h2>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+      <div>
+        <div class="logo">COINEST</div>
+
+        <nav class="menu">
+          <a href="dashboard.html">Dashboard</a>
+          <a href="payments.html">Payments</a>
+          <a href="entries.html">Transactions</a>
+          <a href="add-entry.html">Add Entry</a>
+        </nav>
+      </div>
+
+      <div>
+        <div class="promo-card" style="margin-bottom: 20px;">
+          <p>Gain full access to your finances with detailed analytics and graphs.</p>
+          <button>Go Pro</button>
+        </div>
+        <button class="logout-btn-side" onclick="logout()">Logout</button>
+      </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- Header -->
+      <header class="header">
+        <h1>Debt Entries</h1>
+
+        <div class="header-right-container">
+          <input class="search" type="text" placeholder="Search placeholder">
+
+          <div class="header-actions">
+            <span class="icon">◎</span>
+            <span class="icon">🔔</span>
+            <div class="profile">
+              <span id="user-greeting">Loading...</span>
+              <img src="https://i.pravatar.cc/40" alt="">
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Entries Section -->
+      <section>
+
         <div class="filter-controls">
           <input type="text" id="filter-search" placeholder="Search by creditor..." />
           <select id="filter-sort">
@@ -35,26 +97,30 @@
             <option value="amount-asc">Lowest Amount</option>
           </select>
         </div>
-      </div>
-      
-      <div id="entries-container">
-        <table id="debts-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Amount</th>
-              <th>Creditor</th>
-              <th>Due Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+
+        <div class="card table-card">
+          <table id="debts-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid #eef2f0; color: #a0aab2; font-size: 13px;">
+                <th style="padding: 12px 10px; font-weight: 600;">ID</th>
+                <th style="padding: 12px 10px; font-weight: 600;">Amount</th>
+                <th style="padding: 12px 10px; font-weight: 600;">Creditor</th>
+                <th style="padding: 12px 10px; font-weight: 600;">Due Date</th>
+                <th style="padding: 12px 10px; font-weight: 600;">Action</th>
+              </tr>
+            </thead>
+            <tbody style="font-size: 14px;"></tbody>
+          </table>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
 
   <script src="app.js"></script>
   <script src="filter.js"></script>
 </body>
+
 </html>

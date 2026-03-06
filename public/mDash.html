@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance Dashboard</title>
+<link rel="stylesheet" href="mCss.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">COINEST</div>
+
+        <nav class="menu">
+            <a class="active">Dashboard</a>
+            <a>Payments</a>
+            <a>Transactions</a>
+            <a>Invoices</a>
+            <a>Cards</a>
+            <a>Saving Plans</a>
+            <a>Investments</a>
+            <a>Inbox</a>
+            <a>Promos</a>
+            <a>Insights</a>
+        </nav>
+
+        <div class="promo-card">
+            <p>Gain full access to your finances with detailed analytics.</p>
+            <button>Go Pro</button>
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- Header -->
+        <header class="header">
+
+            <input class="search" type="text" placeholder="Search...">
+
+            <div class="header-right">
+                <span class="icon">🔔</span>
+                <span class="icon">💬</span>
+
+                <div class="profile">
+                    <img src="https://i.pravatar.cc/40" alt="">
+                    <span>Andrew Forbis</span>
+                </div>
+            </div>
+
+        </header>
+
+
+        <!-- Summary Cards -->
+        <section class="summary">
+
+            <div class="card">
+                <h4>Income</h4>
+                <h2>$8,500</h2>
+                <p class="green">+ $355 this week</p>
+            </div>
+
+            <div class="card">
+                <h4>Expense</h4>
+                <h2>$4,900</h2>
+                <p class="red">- $126 this week</p>
+            </div>
+
+            <div class="card">
+                <h4>Savings</h4>
+                <h2>$2,000</h2>
+                <p class="green">+ $30</p>
+            </div>
+
+            <div class="card">
+                <h4>Investment</h4>
+                <h2>$1,600</h2>
+                <p class="green">+ $64</p>
+            </div>
+
+        </section>
+
+
+        <!-- Middle Grid -->
+        <section class="middle">
+
+            <!-- Cashflow -->
+            <div class="card large">
+                <h3>Cashflow</h3>
+                <div class="chart"></div>
+            </div>
+
+            <!-- Expense -->
+            <div class="card">
+                <h3>Expense Breakdown</h3>
+                <div class="circle-chart"></div>
+
+                <ul class="expense-list">
+                    <li>Food & Dining <span>50%</span></li>
+                    <li>Utilities <span>30%</span></li>
+                    <li>Investment <span>20%</span></li>
+                </ul>
+            </div>
+
+            <!-- Finance Score -->
+            <div class="card">
+                <h3>Finance Score</h3>
+                <p class="score">Excellent</p>
+
+                <div class="progress">
+                    <div class="progress-bar"></div>
+                </div>
+
+                <p>92%</p>
+            </div>
+
+            <!-- Balance -->
+            <div class="card">
+                <h3>Balance</h3>
+                <h2>$1,377,000</h2>
+
+                <div class="credit-card">
+                    <h4>Visa</h4>
+                    <p>$415,000</p>
+                </div>
+
+                <div class="credit-card dark">
+                    <h4>Mastercard</h4>
+                    <p>$532,000</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Bottom Section -->
+        <section class="bottom">
+
+            <!-- Transactions -->
+            <div class="card large">
+
+                <h3>Recent Transactions</h3>
+
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+
+                    <tr>
+                        <td>Dividend Payout</td>
+                        <td>25 Sep</td>
+                        <td class="green">+$200</td>
+                        <td>Completed</td>
+                    </tr>
+
+                    <tr>
+                        <td>Grocery Shopping</td>
+                        <td>24 Sep</td>
+                        <td class="red">-$154</td>
+                        <td>Completed</td>
+                    </tr>
+
+                    <tr>
+                        <td>Electricity Bill</td>
+                        <td>22 Sep</td>
+                        <td class="red">-$120</td>
+                        <td>Completed</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+
+            <!-- Saving Plans -->
+            <div class="card">
+
+                <h3>Saving Plans</h3>
+
+                <div class="plan">
+                    <p>Emergency Fund</p>
+                    <div class="progress">
+                        <div class="progress-bar w45"></div>
+                    </div>
+                </div>
+
+                <div class="plan">
+                    <p>Retirement</p>
+                    <div class="progress">
+                        <div class="progress-bar w25"></div>
+                    </div>
+                </div>
+
+                <div class="plan">
+                    <p>Vacation</p>
+                    <div class="progress">
+                        <div class="progress-bar w50"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Recent Activities -->
+            <div class="card">
+
+                <h3>Recent Activities</h3>
+
+                <ul class="activities">
+                    <li>Reviewed alerts for low balance</li>
+                    <li>Checked account balance</li>
+                    <li>Logged in from mobile</li>
+                    <li>Scheduled utility payment</li>
+                </ul>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

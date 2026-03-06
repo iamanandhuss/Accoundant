@@ -1,84 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Entry - Personal Finance Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="mCss.css">
+  <style>
+    /* Local overrides for the form card */
+    .form-card {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #6a746e;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 12px;
+      border: 1px solid #eef2f0;
+      background: #f7f9fc;
+      color: #1a1a1a;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #8de392;
+    }
+
+    .submit-btn {
+      background: #1a3224;
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      width: 100%;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: #2b4c3e;
+    }
+
+    .balance-info {
+      background: #f7f9fc;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .balance-info p {
+      font-size: 14px;
+      color: #6a746e;
+      font-weight: 600;
+    }
+
+    .balance-amount {
+      font-size: 18px;
+      font-weight: 800;
+      color: #1a3224;
+    }
+
+    .balance-warning {
+      color: #d14b4b;
+      background: #fdf0f0;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .success-message {
+      display: none;
+      background: #e6f6e8;
+      color: #2b4c3e;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+    }
+  </style>
 </head>
+
 <body>
-  <header class="header">
-    <div class="header-content">
-      <h1>Personal Finance Tracker</h1>
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
-  </header>
 
-  <nav class="navbar">
-    <a href="dashboard.html" class="nav-link">Dashboard</a>
-    <a href="add-entry.html" class="nav-link active">Add Entry</a>
-    <a href="entries.html" class="nav-link">All Entries</a>
-  </nav>
+  <div class="dashboard-layout">
 
-  <main class="container">
-    <section class="forms">
-      <h2>Add New Entry</h2>
-      
-      <!-- Balance warning section -->
-      <div id="balance-info" class="balance-info">
-        <p>Current Balance: <span id="current-balance" class="balance-amount">₹0</span></p>
-        <p id="balance-warning" class="balance-warning" style="display: none;">
-          ⚠️ Your balance is negative. You cannot add expenses until your balance is positive.
-        </p>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+      <div>
+        <div class="logo">COINEST</div>
+
+        <nav class="menu">
+          <a href="dashboard.html">Dashboard</a>
+          <a href="payments.html">Payments</a>
+          <a href="entries.html">Transactions</a>
+          <a href="add-entry.html" class="active">Add Entry</a>
+        </nav>
       </div>
-      
-      <form id="entry-form">
-        <select id="entry-type" required>
-          <option value="income">Income</option>
-          <option value="expenses">Expense</option>
-          <option value="debts">Debt</option>
-        </select>
-        <input type="number" id="amount" placeholder="Amount" step="0.01" required />
-        <input type="text" id="detail" placeholder="Source / Category / Creditor" required />
-        <input type="date" id="date" required />
-        <button type="submit">Add Entry</button>
-      </form>
-      <div id="success-message" class="success-message"></div>
-    </section>
-  </main>
+
+      <div>
+        <div class="promo-card" style="margin-bottom: 20px;">
+          <p>Gain full access to your finances with detailed analytics and graphs.</p>
+          <button>Go Pro</button>
+        </div>
+        <button class="logout-btn-side" onclick="logout()">Logout</button>
+      </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- Header -->
+      <header class="header">
+        <h1>Add New Entry</h1>
+
+        <div class="header-right-container">
+          <input class="search" type="text" placeholder="Search placeholder">
+
+          <div class="header-actions">
+            <span class="icon">◎</span>
+            <span class="icon">🔔</span>
+            <div class="profile">
+              <span id="user-greeting">Loading...</span>
+              <img src="https://i.pravatar.cc/40" alt="">
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Form Section -->
+      <section>
+        <div class="card form-card">
+          <h3>Transaction Details</h3>
+
+          <!-- Balance warning section -->
+          <div id="balance-info" class="balance-info">
+            <p>Current Balance</p>
+            <div id="current-balance" class="balance-amount">₹0</div>
+          </div>
+          <div id="balance-warning" class="balance-warning" style="display: none;">
+            ⚠️ Your balance is negative. You cannot add expenses until your balance is positive.
+          </div>
+
+          <form id="entry-form" style="margin-top: 20px;">
+            <div class="form-group">
+              <label for="entry-type">Type</label>
+              <select id="entry-type" required>
+                <option value="income">Income</option>
+                <option value="expenses">Expense</option>
+                <option value="debts">Debt</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input type="number" id="amount" placeholder="0.00" step="0.01" required />
+            </div>
+
+            <div class="form-group">
+              <label for="detail">Details (Source / Category / Creditor)</label>
+              <input type="text" id="detail" placeholder="e.g. Salary, Utilities, Loan" required />
+            </div>
+
+            <div class="form-group">
+              <label for="date">Date</label>
+              <input type="date" id="date" required />
+            </div>
+
+            <button type="submit" class="submit-btn">Add Entry</button>
+          </form>
+          <div id="success-message" class="success-message"></div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
 
   <script>
     // Fetch current balance on page load
     async function loadBalance() {
       try {
+        // Setup auth header inline here since app.js is loaded later in this page, or we rely on app.js checkAuth() and getAuthHeader().
+        // But we can just use the token in localStorage.
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
         const res = await fetch('/api/summary', {
-          headers: getAuthHeader()
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         });
         const data = await res.json();
         window.currentBalance = data.balance || 0;
-        
+
         const balanceElement = document.getElementById('current-balance');
-        balanceElement.textContent = formatCurrency(data.balance || 0);
-        
+
+        // Format Currency
+        const formatted = `₹${Number(data.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        balanceElement.textContent = formatted;
+
         // Update balance warning
         const warningElement = document.getElementById('balance-warning');
         if (data.balance < 0) {
-          balanceElement.parentElement.style.color = '#ff6666';
+          balanceElement.style.color = '#d14b4b';
           warningElement.style.display = 'block';
         } else {
-          balanceElement.parentElement.style.color = '#99ff99';
+          balanceElement.style.color = '#1a3224';
           warningElement.style.display = 'none';
         }
       } catch (e) {
         console.error('Failed to load balance', e);
       }
     }
-    
+
     // Load balance when page loads
     document.addEventListener('DOMContentLoaded', () => {
       loadBalance();
+
+      // Auto-fill today's date
+      document.getElementById('date').valueAsDate = new Date();
     });
   </script>
   <script src="app.js"></script>
 </body>
+
 </html>
