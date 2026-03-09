@@ -49,6 +49,28 @@ const initQueries = [
   creditor TEXT,
   due_date DATE NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)`,
+  `CREATE TABLE IF NOT EXISTS cards (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  cardName VARCHAR(255) NOT NULL,
+  bankName VARCHAR(255) NOT NULL,
+  lastFourDigits VARCHAR(4) NOT NULL,
+  cardLimit DOUBLE NOT NULL,
+  repaymentDueDate DATE NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)`,
+  `CREATE TABLE IF NOT EXISTS card_transactions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  cardId INT NOT NULL,
+  amount DOUBLE NOT NULL,
+  description TEXT,
+  category TEXT,
+  transactionDate DATE NOT NULL,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (cardId) REFERENCES cards(id) ON DELETE CASCADE
 )`
 ];
 
@@ -115,7 +137,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Helper to validate type
-const validTypes = ['income', 'expenses', 'debts'];
+const validTypes = ['income', 'expenses', 'debts', 'cards', 'card_transactions'];
 
 // Authentication Routes
 app.post('/api/auth/register', async (req, res) => {
@@ -187,7 +209,8 @@ app.get('/api/summary', authenticateToken, async (req, res) => {
     const queries = [
       'SELECT SUM(amount) as total FROM income WHERE user_id = ?',
       'SELECT SUM(amount) as total FROM expenses WHERE user_id = ?',
-      'SELECT SUM(amount) as total FROM debts WHERE user_id = ?'
+      'SELECT SUM(amount) as total FROM debts WHERE user_id = ?',
+      'SELECT SUM(amount) as total FROM card_transactions WHERE user_id = ?'
     ];
 
     const results = await Promise.all(
@@ -195,13 +218,18 @@ app.get('/api/summary', authenticateToken, async (req, res) => {
     );
 
     const income = results[0][0][0].total || 0;
-    const expenses = results[1][0][0].total || 0;
+    const directExpenses = results[1][0][0].total || 0;
     const debts = results[2][0][0].total || 0;
-    const balance = income - expenses - debts;
+    const cardSpent = results[3][0][0].total || 0;
+
+    // Total expenses should include both regular expenses and card transactions
+    const totalExpenses = directExpenses + cardSpent;
+
+    const balance = income - totalExpenses - debts;
 
     const result = {
       income,
-      expenses,
+      expenses: totalExpenses,
       debts,
       net: balance,
       balance: balance,
@@ -305,6 +333,50 @@ app.delete('/api/:type/:id', authenticateToken, async (req, res) => {
     }
 
     res.json({ changes: result.affectedRows });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Secure Card Deletion Route
+app.post('/api/cards/:id/delete', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { password } = req.body;
+  const userId = req.user.id;
+
+  if (!password) {
+    return res.status(400).json({ error: 'Password is required to delete a card' });
+  }
+
+  try {
+    const conn = await pool.getConnection();
+
+    // Verify Password
+    const [[user]] = await conn.query('SELECT password FROM users WHERE id = ?', [userId]);
+    if (!user) {
+      conn.release();
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      conn.release();
+      return res.status(401).json({ error: 'Incorrect password' });
+    }
+
+    // Delete Card (Cascades to card_transactions)
+    const [result] = await conn.query(
+      'DELETE FROM cards WHERE id = ? AND user_id = ?',
+      [id, userId]
+    );
+
+    conn.release();
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Card not found or unauthorized' });
+    }
+
+    res.json({ message: 'Card deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

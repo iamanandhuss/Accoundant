@@ -218,15 +218,17 @@ async function loadRecentTransactions() {
     if (!tableBody) return; // Not on dashboard
 
     try {
-        const [incomeRes, expenseRes, debtRes] = await Promise.all([
+        const [incomeRes, expenseRes, debtRes, cardsRes] = await Promise.all([
             fetch(`${apiBase}/income`, { headers: getAuthHeader() }).catch(() => ({ json: () => [] })),
             fetch(`${apiBase}/expenses`, { headers: getAuthHeader() }).catch(() => ({ json: () => [] })),
-            fetch(`${apiBase}/debts`, { headers: getAuthHeader() }).catch(() => ({ json: () => [] }))
+            fetch(`${apiBase}/debts`, { headers: getAuthHeader() }).catch(() => ({ json: () => [] })),
+            fetch(`${apiBase}/card_transactions`, { headers: getAuthHeader() }).catch(() => ({ json: () => [] }))
         ]);
 
         const incomeData = incomeRes.ok ? await incomeRes.json() : [];
         const expenseData = expenseRes.ok ? await expenseRes.json() : [];
         const debtData = debtRes.ok ? await debtRes.json() : [];
+        const cardsData = cardsRes.ok ? await cardsRes.json() : [];
 
         let allTransactions = [];
 
@@ -238,6 +240,9 @@ async function loadRecentTransactions() {
         });
         debtData.forEach(item => {
             allTransactions.push({ type: 'Debt', name: item.creditor || 'Debt', subtext: 'Liability', date: item.due_date, amount: item.amount, isPositive: false, status: 'Pending', statusClass: 'status-pending' });
+        });
+        cardsData.forEach(item => {
+            allTransactions.push({ type: 'Card', name: item.description || 'Card Tx', subtext: 'Card Payment', date: item.transactionDate, amount: item.amount, isPositive: false, status: 'Completed', statusClass: 'status-completed' });
         });
 
         // Sort by date descending
@@ -298,6 +303,26 @@ async function loadAndDisplayEntries() {
                 headers: getAuthHeader()
             });
             const entries = await res.json();
+
+            // If handling expenses, also fetch card transactions to mingle them
+            if (type === 'expenses') {
+                try {
+                    const cardRes = await fetch(`${apiBase}/card_transactions`, { headers: getAuthHeader() });
+                    if (cardRes.ok) {
+                        const cardEntries = await cardRes.json();
+                        // Map card entries to look like expenses but keep their true ID and Type for deletion
+                        const mappedCardEntries = cardEntries.map(ce => ({
+                            ...ce,
+                            isCard: true,
+                            category: ce.description || 'Card Payment',
+                            date: ce.transactionDate
+                        }));
+                        entries.push(...mappedCardEntries);
+                        entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    }
+                } catch (e) { console.error('Failed to load card_transactions for expenses table', e); }
+            }
+
             displayEntriesInTable(type, entries);
         } catch (e) {
             console.error(`Failed to load ${type}`, e);
@@ -326,8 +351,12 @@ function displayEntriesInTable(type, entries) {
         const amountColorClass = type === 'income' ? 'text-green' : 'text-red';
         const sign = type === 'income' ? '+' : '-';
         const name = entry.source || entry.category || entry.creditor;
-        const subtext = type === 'income' ? 'Deposit' : type === 'expenses' ? 'Payment' : 'Liability';
+        // Adjust subtext if it's a card transaction mixed into expenses
+        const subtext = type === 'income' ? 'Deposit' : (entry.isCard ? 'Card Payment' : (type === 'expenses' ? 'Payment' : 'Liability'));
         const dateStr = entry.date || entry.due_date;
+
+        // Ensure proper deletion type
+        const deleteType = entry.isCard ? 'card_transactions' : type;
 
         row.innerHTML = `
             <td style="padding: 12px 10px; color: #a0aab2;">#${entry.id}</td>
@@ -338,7 +367,7 @@ function displayEntriesInTable(type, entries) {
             </td>
             <td style="padding: 12px 10px; color: #6a746e;">${new Date(dateStr).toISOString().split('T')[0]}</td>
             <td style="padding: 12px 10px;">
-                <button class="delete-btn" style="background:#fdf0f0; color:#d14b4b; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:600;" data-type="${type}" data-id="${entry.id}">Delete</button>
+                <button class="delete-btn" style="background:#fdf0f0; color:#d14b4b; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:600;" data-type="${deleteType}" data-id="${entry.id}">Delete</button>
             </td>
         `;
         tbody.appendChild(row);

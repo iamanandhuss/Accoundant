@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments & Cards</title>
+    <link rel="stylesheet" href="mCss.css">
+    <style>
+        .cards-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-item {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-item.selected {
+            border: 2px solid #1a3224;
+        }
+
+        .card-item.selected .realistic-card {
+            box-shadow: 0 0 0 3px #fff, 0 0 0 6px #1a3224;
+        }
+
+        .realistic-card {
+            width: 100%;
+            aspect-ratio: 1.586 / 1;
+            /* Standard credit card ratio */
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            /* Default background fallback */
+            background: linear-gradient(135deg, #1a3224, #2c533e);
+            font-family: 'Courier New', Courier, monospace;
+            /* Techy monospace font for numbers */
+        }
+
+        .realistic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            border-radius: 16px;
+            pointer-events: none;
+        }
+
+        /* Abstract colorful gradient backgrounds mimicking the image closely */
+        .realistic-card.bg-gradient-1 {
+            background: linear-gradient(135deg, #ff758c 0%, #a25bc2 35%, #4b6cb7 70%, #ff7eb3 100%);
+            background-size: 200% 200%;
+            animation: gradientAnim 15s ease infinite;
+        }
+
+        .realistic-card.bg-gradient-2 {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+        }
+
+        .realistic-card.bg-gradient-3 {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        }
+
+        .realistic-card.bg-gradient-4 {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        }
+
+        @keyframes gradientAnim {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .realistic-card .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .realistic-card .chip {
+            width: 48px;
+            height: 36px;
+            background: #d4af37;
+            /* Gold base */
+            background: linear-gradient(-45deg, #f3e2c7, #b68d4c, #e6d089, #9c7539);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Drawing chip lines */
+        .realistic-card .chip::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            right: -5px;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 -10px 0 rgba(0, 0, 0, 0.3), 0 10px 0 rgba(0, 0, 0, 0.3);
+            transform: translateY(-50%);
+        }
+
+        .realistic-card .chip::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -5px;
+            bottom: -5px;
+            width: 1px;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: -10px 0 0 rgba(0, 0, 0, 0.3), 10px 0 0 rgba(0, 0, 0, 0.3);
+            transform: translateX(-50%);
+        }
+
+        .realistic-card .brand {
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .realistic-card .card-number {
+            font-size: 24px;
+            letter-spacing: 4px;
+            margin-top: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-align: left;
+        }
+
+        .realistic-card .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .realistic-card .card-holder .label,
+        .realistic-card .card-expiry .label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            margin-bottom: 2px;
+        }
+
+        .realistic-card .card-holder .name {
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .realistic-card .card-expiry {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .realistic-card .card-expiry .valid-thru {
+            font-size: 8px;
+            text-transform: uppercase;
+            line-height: 1.2;
+            text-align: right;
+            opacity: 0.8;
+        }
+
+        .realistic-card .card-expiry .date {
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-details-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            display: none;
+            /* hidden by default */
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6a746e;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #1a3224;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #eef2f0;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #1a3224;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #1a3224;
+            border: 1px solid #1a3224;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-danger {
+            background: #fff;
+            color: #d9534f;
+            border: 1px solid #d9534f;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-danger:hover {
+            background: #d9534f;
+            color: white;
+        }
+
+        .transaction-list {
+            margin-top: 20px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eef2f0;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .tx-info h4 {
+            margin: 0 0 5px 0;
+            color: #1a3224;
+        }
+
+        .tx-info p {
+            margin: 0;
+            font-size: 12px;
+            color: #6a746e;
+        }
+
+        .tx-amount {
+            font-weight: 700;
+            color: #d9534f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div>
+                <div class="logo">COINEST</div>
+                <nav class="menu">
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="payments.html" class="active">Payments</a>
+                    <a href="entries.html">Transactions</a>
+                    <a href="add-entry.html">Add Entry</a>
+                </nav>
+            </div>
+            <div>
+                <button class="logout-btn-side" onclick="logout()">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+
+            <header class="header">
+                <h1>Payments & Cards</h1>
+                <div class="header-right-container">
+                    <div class="header-actions">
+                        <div class="profile">
+                            <span id="user-greeting">User</span>
+                            <img src="https://i.pravatar.cc/40" alt="">
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <section style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>My Cards</h2>
+                    <button class="btn-primary" style="width: auto;" onclick="openAddCardModal()">+ Add New
+                        Card</button>
+                </div>
+
+                <div id="cards-container" class="cards-list">
+                    <!-- Cards will be populated here -->
+                </div>
+
+                <div id="card-details-view" class="card-details-section">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                        <div>
+                            <h3 id="detail-card-name">Card Details</h3>
+                            <p id="detail-card-bank" style="color: #6a746e; font-size: 14px;">Select a card</p>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-danger" style="width: auto;" onclick="openDeleteCardModal()">Delete
+                                Card</button>
+                            <button class="btn-outline" style="width: auto;" onclick="openAddTransactionModal()">+ Log
+                                Transaction</button>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                        <div style="background: #f8faf9; padding: 20px; border-radius: 12px;">
+                            <p style="color: #6a746e; font-size: 12px; margin-bottom: 5px;">Total Spent</p>
+                            <h2 id="detail-total-spent" style="color: #d9534f;">$0.00</h2>
+                        </div>
+                        <div style="background: #f8faf9; padding: 20px; border-radius: 12px;">
+                            <p style="color: #6a746e; font-size: 12px; margin-bottom: 5px;">Remaining Credit</p>
+                            <h2 id="detail-remaining-credit" style="color: #28a745;">$0.00</h2>
+                        </div>
+                    </div>
+
+                    <h3>Recent Card Transactions</h3>
+                    <div id="card-transactions-list" class="transaction-list">
+                        <!-- Transactions will be populated here -->
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Add Card Modal -->
+    <div id="addCardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Card</h3>
+                <button class="close-btn" onclick="closeAddCardModal()">×</button>
+            </div>
+            <form id="add-card-form">
+                <div class="form-group">
+                    <label>Card Name (e.g. Current Account, HDFC Credit)</label>
+                    <input type="text" id="cardName" required>
+                </div>
+                <div class="form-group">
+                    <label>Bank Name</label>
+                    <input type="text" id="bankName" required>
+                </div>
+                <div class="form-group">
+                    <label>Last 4 Digits</label>
+                    <input type="text" id="lastFourDigits" maxlength="4" pattern="\d{4}"
+                        title="Please enter exactly 4 digits" required>
+                </div>
+                <div class="form-group">
+                    <label>Credit Limit</label>
+                    <input type="number" id="cardLimit" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Repayment Due Date</label>
+                    <input type="date" id="repaymentDueDate" required>
+                </div>
+                <button type="submit" class="btn-primary">Add Card</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div id="addTransactionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Log Card Transaction</h3>
+                <button class="close-btn" onclick="closeAddTransactionModal()">×</button>
+            </div>
+            <form id="add-tx-form">
+                <input type="hidden" id="tx-card-id">
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="txAmount" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="txDescription" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="txCategory" required>
+                        <option value="Food & Dining">Food & Dining</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="txDate" required>
+                </div>
+                <button type="submit" class="btn-primary">Save Transaction</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Card Modal -->
+    <div id="deleteCardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color: #d9534f;">Delete Card</h3>
+                <button class="close-btn" onclick="closeDeleteCardModal()">×</button>
+            </div>
+            <p style="margin-bottom: 15px; font-size: 14px; color: #6a746e;">
+                Warning: Deleting this card will also permanently delete all associated transactions.
+            </p>
+            <form id="delete-card-form">
+                <div class="form-group">
+                    <label>Enter Login Password to Confirm</label>
+                    <input type="password" id="deleteCardPassword" required>
+                </div>
+                <button type="submit" class="btn-danger"
+                    style="width: 100%; background: #d9534f; color: white;">Permanently Delete Card</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script src="payments.js"></script>
+</body>
+
+</html>
